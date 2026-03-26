@@ -1,22 +1,37 @@
-# Stage 1: build
-FROM node:20-alpine AS build
-
+# Stage 1: Build
+FROM node:20-bullseye AS build
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
+# Install build tools for native modules
+RUN apt-get update && \
+    apt-get install -y python3 make g++ bash curl git libc++-dev libfreetype6 libfontconfig1 && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY . .
+# Copy package files and install dependencies
+COPY package*.json ./
+ENV ROLLUP_IGNORE_OPTIONAL_NATIVE=1
+RUN npm install --force
+
+# Copy all source code and configs needed for build & tests
+COPY src ./src
+COPY public ./public
+COPY vite.config.ts ./vite.config.ts
+COPY tsconfig.json ./tsconfig.json
+COPY tsconfig.app.json ./tsconfig.app.json
+COPY tsconfig.node.json ./tsconfig.node.json
+COPY index.html ./index.html
+COPY vitest.config.js ./vitest.config.js
+COPY vitest.setup.ts ./vitest.setup.ts
+
+# Run frontend tests BEFORE build
+ARG CACHEBUST=1
+RUN echo "CACHEBUST=$CACHEBUST" && npm run test
+
+# Build frontend
 RUN npm run build
 
-# Stage 2: serve
+# Stage 2: Serve with nginx
 FROM nginx:alpine
-
-# Copy built frontend from previous stage
 COPY --from=build /app/dist /usr/share/nginx/html
-
-# Expose port 5173
-EXPOSE 5173
-
-# Print link and start nginx in one line
-CMD sh -c 'echo ">~~~~~~~~~~~Frontend: http://localhost:5173 ~~~~~~~~~~~<" && nginx -g "daemon off;"'
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

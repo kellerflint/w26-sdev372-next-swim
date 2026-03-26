@@ -1,0 +1,17 @@
+import { render, screen } from "@testing-library/react";
+import Navbar from "../components/NavBar";
+import { MemoryRouter } from "react-router-dom";
+import { expect, test } from "vitest";
+
+test("renders navbar links", () => {
+  render(
+    <MemoryRouter>
+      <Navbar />
+    </MemoryRouter>
+  );
+
+  expect(screen.getByText("NS")).toBeInTheDocument(); // updated logo text
+  expect(screen.getByText("Home")).toBeInTheDocument();
+  expect(screen.getByText("Quiz")).toBeInTheDocument();
+  expect(screen.getByText("Resources")).toBeInTheDocument(); // updated link text
+});

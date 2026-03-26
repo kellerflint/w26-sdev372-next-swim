@@ -1,19 +1,24 @@
-const pool = require("./db");
+import pool from "./db.js";
 
-async function initDb() {
-  try {
-    await pool.query("USE nextswim");
-    console.log("Database connection ready!");
-  } catch (err) {
-    console.error("Database init failed:", err);
-    throw err;
+async function initDB(retries = 15) {
+  while (retries) {
+    try {
+      await pool.query("USE nextswim");
+      console.log("Database connection ready!");
+      return;
+    } catch (err) {
+
+      //waits for the DB instead of immediately crashing if SQL doesn't load fast enough for the backend
+      console.log("Waiting for database...");
+      retries--;
+      await new Promise(resolve => setTimeout(resolve, 3000));
+    }
   }
+
+  throw new Error("Database connection failed after multiple attempts.");
 }
 
-module.exports = initDb;
-
-
-
+export default initDB;
 
 /*
 const pool = mysql.createPool({

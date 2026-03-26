@@ -1,0 +1,84 @@
+/* Container */
+
+.add-resource-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+/* Title */
+.add-resource-container h2 {
+  margin-bottom: 20px;
+  color: #0ea5b7;
+}
+
+/* Form */
+.add-resource-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Inputs */
+.form-input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  width: 100%;
+  transition: 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #0ea5b7;
+  box-shadow: 0 0 0 2px rgba(14,165,183,0.2);
+}
+
+/* Row for select + number */
+.form-group-row {
+  display: flex;
+  gap: 10px;
+}
+
+.form-group-row .form-input {
+  flex: 1;
+}
+
+/* Textarea */
+textarea.form-input {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Button */
+.submit-btn {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #0ea5b7;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.submit-btn:hover {
+  background: #0E76C5;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .add-resource-container {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .form-group-row {
+    flex-direction: column;
+  }
+}
